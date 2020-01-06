@@ -4,9 +4,7 @@
 
 
 ## Background
-This repository is our team's solution of 2019 [ICDAR-SROIE](https://rrc.cvc.uab.es/?ch=13&com=introduction) competition. As the name suggests, this competition is mainly about Optical Character Recognition and information extraction:
-
-> Scanned receipts OCR and information extraction (SROIE) play critical roles in streamlining document-intensive processes and office automation in many financial, accounting and taxation areas. 
+Scanned receipts OCR and information extraction (SROIE) play critical roles in streamlining document-intensive processes and office automation in many financial, accounting and taxation areas. 
 
 ### Dataset and Annotations
 
