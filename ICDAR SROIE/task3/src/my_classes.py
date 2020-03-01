@@ -2,6 +2,7 @@ import numpy
 
 
 class TextBox(object):
+    """TextBox object with x, y, xspan and yspan, and the text"""
     def __init__(self, line):
         line_split = line.strip().split(",", maxsplit=8)
         self.xspan = (int(line_split[0]), int(line_split[4]))
@@ -15,6 +16,9 @@ class TextBox(object):
 
 
 class TextLine(object):
+    """TestLine class: Facilitates inserting texts inside a TextBox object, if permissible
+       Method(s): TextLine.().insert(text_box)
+    """
     def __init__(self, text_box=None):
         if isinstance(text_box, TextBox):
             self.text = [text_box.text]
