@@ -10,6 +10,7 @@ from my_utils import pred_to_dict
 
 
 def main():
+    # read the command line arguments
     parser = argparse.ArgumentParser()
     parser.add_argument("-d", "--device", default="cpu")
     parser.add_argument("-b", "--batch_size", type=int, default=10)
@@ -21,8 +22,10 @@ def main():
     args = parser.parse_args()
     args.device = torch.device(args.device)
 
+    # build model
     model = MyModel0(len(VOCAB), 16, args.hidden_size).to(args.device)
 
+    # prepare the dataset by initializing MyDataset class
     dataset = MyDataset(
         "data/data_dict4.pth",
         args.device,
@@ -30,10 +33,13 @@ def main():
         test_path="data/test_dict.pth",
     )
 
+    # Use CrossEntropy as loss function
     criterion = nn.CrossEntropyLoss(
         weight=torch.tensor([0.1, 1, 1.2, 0.8, 1.5], device=args.device)
     )
+    # Adam optimizer gives best performance in this case
     optimizer = optim.Adam(model.parameters())
+    # Added learning rate scheduler for future callbacks
     scheduler = optim.lr_scheduler.StepLR(optimizer, 1000)
 
     for i in range(args.max_epoch // args.val_at):
