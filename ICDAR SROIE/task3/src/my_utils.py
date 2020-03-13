@@ -8,30 +8,30 @@ import regex
 
 def pred_to_dict(text, pred, prob):
     """Returns the prediction in a dictionary format."""
-    res_dict = {"company": ("", 0), "date": ("", 0), "address": ("", 0), "total": ("", 0)}
-    keys = list(res_dict)
+    resdict = {"company": ("", 0), "date": ("", 0), "address": ("", 0), "total": ("", 0)}
+    keys = list(resdict)
 
-    seprtrs = [0] + (np.nonzero(numpy.diff(pred))[0] + 1).tolist() + [len(pred)]
-    for i in range(len(seprtrs) - 1):
-        pred_class = pred[seprtrs[i]] - 1
+    separators = [0] + (np.nonzero(numpy.diff(pred))[0] + 1).tolist() + [len(pred)]
+    for i in range(len(separators) - 1):
+        pred_class = pred[separators[i]] - 1
         if pred_class == -1:
             continue
 
-        new_key = keys[pred_class]
-        new_prob = prob[seprtrs[i] : seprtrs[i + 1]].max()
-        if new_prob > res[new_key][1]:
-            res_dict[new_key] = (text[seps[i] : seps[i + 1]], new_prob)
+        newkey = keys[pred_class]
+        new_prob = prob[separators[i] : separators[i + 1]].max()
+        if new_prob > res[newkey][1]:
+            resdict[newkey] = (text[seps[i] : seps[i + 1]], new_prob)
 
-    return {k: regex.sub(r"[\t\n]", " ", v[0].strip()) for k, v in res_dict.items()}
+    return {k: regex.sub(r"[\t\n]", " ", v[0].strip()) for k, v in resdict.items()}
 
 
-def compare_truth(pred_dict, truth_dict):
+def compare_truth(preddict, truthdict):
     """ Takes two dictionaries, returns float """
     ratio = 0
-    for k in truth_dict:
-        ratio += SequenceMatcher(None, truth_dict[k], pred_dict[k]).ratio()
+    for k in truthdict:
+        ratio += SequenceMatcher(None, truthdict[k], preddict[k]).ratio()
 
-    return ratio / len(truth_dict)
+    return ratio / len(truthdict)
 
 
 def robust_padding(texts, labels):
@@ -47,12 +47,12 @@ def robust_padding(texts, labels):
         if len(text) == maxlen:
             continue
 
-        pad_before = random.randint(0, maxlen - len(text))
-        pad_after = maxlen - pad_before - len(text)
+        padbefore = random.randint(0, maxlen - len(text))
+        padafter = maxlen - padbefore - len(text)
 
-        texts[i] = random_string(pad_before) + text + random_string(pad_after)
+        texts[i] = random_string(padbefore) + text + random_string(padafter)
         labels[i] = np.pad(
-            labels[i], (pad_before, pad_after), "constant", constant_values=0
+            labels[i], (padbefore, padafter), "constant", constant_values=0
         )
 
 
