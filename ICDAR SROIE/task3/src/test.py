@@ -21,8 +21,8 @@ def test():
 
     model.eval()
     with torch.no_grad():
-        for key in dataset.test_dict.keys():
-            text_tensor = dataset.get_test_data(key)
+        for k in dataset.test_dict.ks():
+            text_tensor = dataset.get_test_data(k)
 
             oupt = model(text_tensor)
             prob = torch.nn.functional.softmax(oupt, dim=2)
@@ -31,13 +31,13 @@ def test():
             prob = prob.squeeze().cpu().numpy()
             pred = pred.squeeze().cpu().numpy()
 
-            real_text = dataset.test_dict[key]
+            real_text = dataset.test_dict[k]
             result = pred_to_dict(real_text, pred, prob)
 
-            with open("results/" + key + ".json", "w", encoding="utf-8") as json_opened:
-                json.dump(result, json_opened, indent=4)
+            with open("results/" + k + ".json", "w", encoding="utf-8") as jsonopened:
+                json.dump(result, jsonopened, indent=4)
 
-            print(key)
+            print(k)
 
 
 if __name__ == "__main__":
