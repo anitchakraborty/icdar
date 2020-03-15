@@ -15,24 +15,24 @@ def test():
     args.device = torch.device(args.device)
 
     model = MyModel0(len(VOCAB), 16, args.hidden_size).to(args.device)
-    dataset = MyDataset(None, args.device, test_path="data/test_dict.pth")
+    dataset = MyDataset(None, args.device, test_path="data/testdict.pth")
 
     model.load_state_dict(torch.load("Bi-LSTM_model.pth"))
 
     model.eval()
     with torch.no_grad():
-        for k in dataset.test_dict.ks():
-            text_tensor = dataset.get_test_data(k)
+        for k in dataset.testdict.ks():
+            texttensor = dataset.get_test_data(k)
 
-            oupt = model(text_tensor)
+            oupt = model(texttensor)
             prob = torch.nn.functional.softmax(oupt, dim=2)
             prob, pred = torch.max(prob, dim=2)
 
             prob = prob.squeeze().cpu().numpy()
             pred = pred.squeeze().cpu().numpy()
 
-            real_text = dataset.test_dict[k]
-            result = pred_to_dict(real_text, pred, prob)
+            realtext = dataset.testdict[k]
+            result = pred_to_dict(realtext, pred, prob)
 
             with open("results/" + k + ".json", "w", encoding="utf-8") as jsonopened:
                 json.dump(result, jsonopened, indent=4)

@@ -69,8 +69,8 @@ def main():
             prob = prob.squeeze().cpu().numpy()
             pred = pred.squeeze().cpu().numpy()
 
-            real_text = dataset.test_dict[key]
-            result = pred_to_dict(real_text, pred, prob)
+            tealtext = dataset.test_dict[key]
+            result = pred_to_dict(tealtext, pred, prob)
 
             with open("results/" + key + ".json", "w", encoding="utf-8") as json_opened:
                 json.dump(result, json_opened, indent=4)
@@ -91,13 +91,13 @@ def validate(model, dataset, batch_size=1):
         pred = pred.cpu().numpy()
 
         for i, key in enumerate(keys):
-            real_text, _ = dataset.val_dict[key]
-            result = pred_to_dict(real_text, pred[:, i], prob[:, i])
+            tealtext, _ = dataset.val_dict[key]
+            result = pred_to_dict(tealtext, pred[:, i], prob[:, i])
 
             for k, v in result.items():
                 print(f"{k:>8}: {v}")
 
-            color_print(real_text, pred[:, i])
+            color_print(tealtext, pred[:, i])
 
 
 def train(model, dataset, criterion, optimizer, epoch_range, batch_size):
