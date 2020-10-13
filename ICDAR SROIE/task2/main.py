@@ -5,10 +5,11 @@ import dataset
 from PIL import Image
 import glob
 import os
+# import pytesseract
 import csv
 import cv2
 import models.crnn as crnn
-
+import string
 
 def predict_this_box(image, model, alphabet):
     converter = utils.strLabelConverter(alphabet)
@@ -34,8 +35,8 @@ def predict_this_box(image, model, alphabet):
 
 def load_images_to_predict():
     # load model
-    model_path = './expr/netCRNN_99_423.pth'
-    alphabet = '0123456789,.:(%$!^&-/);<~|`>?+=_[]{}"\'@#*ABCDEFGHIJKLMNOPQRSTUVWXYZ\ '
+    model_path = './expr/netCRNN_199_423.pth'
+    alphabet = '0123456789,.:(%$!^&-/);<~|`>?+=_[]{}"\'@#*ABCDEFGHIJKLMNOPQRSTUVWXYZ\ '#+string.ascii_lowercase
     imgH = 32 # should be 32
     nclass = len(alphabet) + 1
     nhiddenstate = 256
@@ -49,6 +50,8 @@ def load_images_to_predict():
     # load image
     filenames = [os.path.splitext(f)[0] for f in glob.glob("data_test/*.jpg")]
     jpg_files = [s + ".jpg" for s in filenames]
+    # d = pytesseract.image_to_data(image, output_type=Output.DICT)
+
     for jpg in jpg_files:
         image = Image.open(jpg).convert('L')
         words_list = []
@@ -56,6 +59,7 @@ def load_images_to_predict():
             for line in csv.reader(boxes):
                 box = [int(string, 10) for string in line[0:8]]
                 boxImg = image.crop((box[0], box[1], box[4], box[5]))
+
                 words = predict_this_box(boxImg, model, alphabet)
                 words_list.append(words)
         with open('test_result/'+jpg.split('/')[1].rsplit('.')[0]+'.txt', 'w+') as resultfile:
@@ -125,7 +129,7 @@ def draw():
 
 
 if __name__ == "__main__":
-    # load_images_to_predict()
-    # process_txt()
-    # for_task3()
+    load_images_to_predict()
+    process_txt()
+    for_task3()
     draw()
